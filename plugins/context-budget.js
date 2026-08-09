@@ -61,16 +61,18 @@ export function createContextBudgetHooks(options = {}) {
   const sessions = new Map()
 
   function session(sessionID) {
-    if (!sessions.has(sessionID)) {
-      sessions.set(sessionID, {
-        exactInput: 0,
-        pending: 0,
-        contextLimit: undefined,
-        modelID: undefined,
-        providerID: undefined,
-      })
+    const existing = sessions.get(sessionID)
+    if (existing) return existing
+
+    const created = {
+      exactInput: 0,
+      pending: 0,
+      contextLimit: undefined,
+      modelID: undefined,
+      providerID: undefined,
     }
-    return sessions.get(sessionID)
+    sessions.set(sessionID, created)
+    return created
   }
 
   return {
