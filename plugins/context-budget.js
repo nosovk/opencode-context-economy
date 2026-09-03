@@ -76,15 +76,27 @@ export function createSessionRollover(client, fallbackDirectory) {
   const promptedSessions = new Set()
 
   return async ({ sessionID, agent, model }) => {
-    const source = responseData(
-      await client.session.get({ sessionID, directory: fallbackDirectory }),
-      "Reading source session",
-    )
-    let directory = source.directory || fallbackDirectory
-    const messages = responseData(
-      await client.session.messages({ sessionID, directory }),
-      "Reading source messages",
-    )
+    let source
+    let directory = fallbackDirectory
+    try {
+      source = responseData(
+        await client.session.get({ sessionID, directory: fallbackDirectory }),
+        "Reading source session",
+      )
+      directory = source.directory || fallbackDirectory
+    } catch (err) {
+      console.warn(`[context-budget] Could not read source session ${sessionID}, using fallback directory ${fallbackDirectory}:`, err.message || err)
+    }
+
+    let messages = []
+    try {
+      messages = responseData(
+        await client.session.messages({ sessionID, directory }),
+        "Reading source messages",
+      )
+    } catch (err) {
+      console.warn(`[context-budget] Could not read source messages for ${sessionID}:`, err.message || err)
+    }
 
     let handoff = extractHandoff(messages)
 
@@ -122,7 +134,7 @@ export function createSessionRollover(client, fallbackDirectory) {
     const created = responseData(
       await client.session.create({
         directory,
-        title: `${source.title || "Continued task"} (handoff)`,
+        title: `${source?.title || "Continued task"} (handoff)`,
       }),
       "Creating continuation session",
     )
@@ -226,7 +238,10 @@ export function createContextBudgetHooks(options = {}, dependencies = {}) {
         }
       }
 
-      if (event?.type !== "session.idle" || !rollover) return
+      const isIdle =
+        event?.type === "session.idle" ||
+        (event?.type === "session.status" && event.properties?.status?.type === "idle")
+      if (!isIdle || !rollover) return
       const sessionID = event.properties?.sessionID
       const state = session(sessionID)
       if (!state.requestedRollover || state.startedRollover) return

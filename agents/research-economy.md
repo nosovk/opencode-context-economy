@@ -1,7 +1,7 @@
 ---
 description: Finds and reads public sources while returning compact, precisely located evidence.
 mode: subagent
-model: ai-gate/gemini-3.5-flash-extra-low
+model: ai-gate/gemini-3.8-flash-high
 steps: 12
 permission:
   "*": deny

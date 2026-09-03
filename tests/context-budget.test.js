@@ -108,6 +108,38 @@ test("rolls an exhausted idle session over only once", async () => {
   ])
 })
 
+test("rolls over on session.status idle event", async () => {
+  const rollovers = []
+  const hooks = createContextBudgetHooks(
+    { informThreshold: 10, warnThreshold: 20, handoffThreshold: 30 },
+    { rollover: async (input) => rollovers.push(input) },
+  )
+  const message = { parts: [{ type: "text", text: "x".repeat(124) }], message: {} }
+
+  await hooks["chat.message"](
+    {
+      sessionID: "session-status-idle",
+      agent: "build",
+      model: { providerID: "provider", modelID: "model" },
+    },
+    message,
+  )
+  await hooks.event({
+    event: {
+      type: "session.status",
+      properties: { sessionID: "session-status-idle", status: { type: "idle" } },
+    },
+  })
+
+  assert.deepEqual(rollovers, [
+    {
+      sessionID: "session-status-idle",
+      agent: "build",
+      model: { providerID: "provider", modelID: "model" },
+    },
+  ])
+})
+
 test("requests rollover when a step finish crosses the handoff threshold", async () => {
   const rollovers = []
   const hooks = createContextBudgetHooks(

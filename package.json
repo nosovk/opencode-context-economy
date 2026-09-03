@@ -5,5 +5,8 @@
   "type": "module",
   "scripts": {
     "test": "node --test tests/context-budget.test.js"
+  },
+  "dependencies": {
+    "@opencode-ai/sdk": "1.18.18"
   }
 }
