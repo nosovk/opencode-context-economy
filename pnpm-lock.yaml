@@ -9,13 +9,13 @@ importers:
   .:
     dependencies:
       '@opencode-ai/sdk':
-        specifier: 1.18.18
-        version: 1.18.18
+        specifier: 1.18.33
+        version: 1.18.33
 
 packages:
 
-  '@opencode-ai/sdk@1.18.18':
-    resolution: {integrity: sha512-zJlwXskIR47V1dkPJqeKBgq7nejG1uU8lJaGIGqbX3MWRCT8vKn0fEotbxuPCKnTdmWsDyNGNg9q1qIliDSMDA==}
+  '@opencode-ai/sdk@1.18.33':
+    resolution: {integrity: sha512-Nyurky9+AA2tvZ6my8UtO5pxPoXxrNypqjeEqMshBGiR542glOy+KE1Y+3lwWU+Z6HC/hSmrdXNbX81+qiuTzg==}
 
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
@@ -43,7 +43,7 @@ packages:
 
 snapshots:
 
-  '@opencode-ai/sdk@1.18.18':
+  '@opencode-ai/sdk@1.18.33':
     dependencies:
       cross-spawn: 7.0.6
 

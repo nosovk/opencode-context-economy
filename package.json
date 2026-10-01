@@ -7,6 +7,6 @@
     "test": "node --test tests/context-budget.test.js"
   },
   "dependencies": {
-    "@opencode-ai/sdk": "1.18.18"
+    "@opencode-ai/sdk": "1.18.33"
   }
 }
